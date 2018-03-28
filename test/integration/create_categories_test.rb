@@ -2,8 +2,12 @@ require 'test_helper'
 
 class CreateCategoriesTest < ActionDispatch::IntegrationTest
    
+   def setup
+       @user = User.create(username: "John",email: "John@example.com",password: "password",admin: true)
+   end
+   
    test "get new category form and create category" do
-       
+       signin_as(@user,"password")
        get new_category_path
        assert_template 'categories/new'
        assert_difference 'Category.count' , 1 do
@@ -14,7 +18,7 @@ class CreateCategoriesTest < ActionDispatch::IntegrationTest
    end
 
    test "invalid category submission resulut in failure" do
-       
+       signin_as(@user,"password")
        get new_category_path
        assert_template 'categories/new'
        assert_no_difference 'Category.count' do
@@ -24,6 +28,5 @@ class CreateCategoriesTest < ActionDispatch::IntegrationTest
        assert_select 'h2.panel-title'
        assert_select 'div.panel-body'
    end
-
-    
+  
 end
